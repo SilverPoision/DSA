@@ -1,33 +1,3 @@
-int firstOccurence(string &text, string &pat)
-{
-  // Write your code here.
-  int i = 0, j = 0;
-  while (i < text.size())
-  {
-    if (text[i] == pat[0])
-    {
-      j = i + 1;
-      int k = 1;
-      while (k < pat.size())
-      {
-        if (text[j] == pat[k])
-        {
-          j++;
-          k++;
-        }
-        else
-          break;
-      }
-
-      if (k == pat.size())
-        return i;
-    }
-    i++;
-  }
-
-  return -1;
-}
-
 // Rabin Karp
 // https://www.codingninjas.com/studio/problems/stringmatch-rabincarp_1115738?
 vector<int> stringMatch(string text, string pat)
@@ -102,4 +72,34 @@ vector<int> stringMatch(string text, string pat)
 
   return ans;
   // Write your code here.
+}
+
+int firstOccurence(string &text, string &pat)
+{
+  // Write your code here.
+  int i = 0, j = 0;
+  while (i < text.size())
+  {
+    if (text[i] == pat[0])
+    {
+      j = i + 1;
+      int k = 1;
+      while (k < pat.size())
+      {
+        if (text[j] == pat[k])
+        {
+          j++;
+          k++;
+        }
+        else
+          break;
+      }
+
+      if (k == pat.size())
+        return i;
+    }
+    i++;
+  }
+
+  return -1;
 }

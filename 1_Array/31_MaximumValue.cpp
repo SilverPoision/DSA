@@ -13,35 +13,46 @@ and then comoare arr[i] to right[j] with i =0 and j = n-1 and make
 a maxdiff array and check of its bigger or not then overwrite its value.
 */
 
-int maxDiff(int arr[], int n)
+class Solution
 {
-  int right[n];
-  right[n - 1] = arr[n - 1];
-  for (int i = n - 1; i >= 0; i--)
+public:
+  // A[]: input array
+  // N: size of array
+  // Function to find the maximum index difference.
+  int maxIndexDiff(int arr[], int n)
   {
-    right[i] = max(right[i + 1], arr[i]);
-  }
-  int i = 0, j = n - 1, maxDiff = -1;
+    // Your code here
+    vector<int> left(n), right(n);
+    left[0] = arr[0];
+    right[n - 1] = arr[n - 1];
 
-  while (i < n && j >= 0)
-  {
-    if (right[j] >= arr[i] && maxDiff < (j - i))
+    for (int i = 1; i < n; i++)
     {
-      maxDiff = j - i;
+      left[i] = min(arr[i], left[i - 1]);
     }
-    j--;
-    i++;
-  }
-  return maxDiff;
-}
+    for (int i = n - 2; i >= 0; i--)
+    {
+      right[i] = max(arr[i], right[i + 1]);
+    }
 
-int main()
-{
-  int array[] = {1, 2, 3, 4, 5, 6};
-  int n = sizeof(array) / sizeof(array[0]);
-  cout << "The maximum value of |arr[i] - arr[j]| + |i-j| is " << maxDiff(array, n);
-  return 0;
-}
+    int i = 0, j = 0, ans = 0;
+
+    while (i < n && j < n)
+    {
+      if (left[i] <= right[j])
+      {
+        ans = max(ans, j - i);
+        j++;
+      }
+      else
+      {
+        i++;
+      }
+    }
+
+    return ans;
+  }
+};
 /* Try more Inputs
 case1:
 actual = findDiff([35, 9, 12, 3, 2, 70, 31, 33, 1])

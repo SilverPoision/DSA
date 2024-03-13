@@ -14,6 +14,34 @@ class Solution
 public:
   ListNode *removeNthFromEnd(ListNode *head, int n)
   {
+    ListNode *temp = head;
+    ListNode *temp2 = head;
+    int k = n;
+
+    while (k-- && temp)
+    {
+      temp = temp->next;
+    }
+
+    if (!temp)
+      return temp2->next;
+
+    while (temp->next)
+    {
+      temp = temp->next;
+      temp2 = temp2->next;
+    }
+
+    temp2->next = temp2->next->next;
+    return head;
+  }
+};
+
+class Solution
+{
+public:
+  ListNode *removeNthFromEnd(ListNode *head, int n)
+  {
     ListNode *start = new ListNode();
     start->next = head;
     ListNode *fast = start;
