@@ -1,47 +1,85 @@
 class Solution
 {
 public:
-  int leastInterval(vector<char> &tasks, int k)
+  // https://www.youtube.com/watch?v=rYh-Kkbzsnw
+  // https://leetcode.com/problems/task-scheduler/description/
+  int leastInterval(vector<char> &tasks, int n)
   {
-    priority_queue<int> pq;
-    deque<pair<int, int>> q;
-
-    map<char, int> m;
+    vector<int> freq(26, 0);
+    priority_queue<int> q;
+    int time = 0;
 
     for (auto it : tasks)
     {
-      m[it]++;
+      freq[it - 'A']++;
     }
 
-    for (auto it : m)
+    for (auto it : freq)
     {
-      pq.push(it.second);
+      if (it > 0)
+        q.push(it);
     }
 
-    int time = 0;
-
-    while (!pq.empty() || !q.empty())
+    while (!q.empty())
     {
-      time++;
-      if (!pq.empty())
+      vector<int> temp;
+      for (int i = 1; i <= n + 1; i++)
       {
-        int top = pq.top() - 1;
-        pq.pop();
-
-        if (top > 0)
-          q.push_back({top, time + k});
+        if (!q.empty())
+        {
+          int f = q.top();
+          q.pop();
+          f--;
+          temp.push_back(f);
+        }
       }
 
-      if (!q.empty())
+      for (auto it : temp)
       {
-        if (q.front().second == time)
-        {
-          pq.push(q.front().first);
-          q.pop_front();
-        }
+        if (it > 0)
+          q.push(it);
+      }
+
+      if (q.empty())
+      {
+        time += temp.size();
+      }
+      else
+      {
+        time += n + 1;
       }
     }
 
     return time;
+  }
+};
+
+///
+
+class Solution
+{
+public:
+  // https://www.youtube.com/watch?v=rYh-Kkbzsnw
+  int leastInterval(vector<char> &tasks, int n)
+  {
+    vector<int> freq(26, 0);
+
+    for (auto it : tasks)
+    {
+      freq[it - 'A']++;
+    }
+    sort(freq.begin(), freq.end());
+
+    int chunk = freq[25] - 1;
+    int idolSpots = chunk * n;
+
+    for (int i = 24; i >= 0; i--)
+    {
+      idolSpots -= min(chunk, freq[i]);
+    }
+
+    if (idolSpots > 0)
+      return tasks.size() + idolSpots;
+    return tasks.size();
   }
 };
