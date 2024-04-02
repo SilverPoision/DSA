@@ -9,7 +9,9 @@ int merge(vector<int> &arr, int low, int high, int mid)
     if (arr[i] > arr[j])
     {
       temp.push_back(arr[j++]);
-      inversion += (mid - i + 1);
+      inversion += (mid - i + 1); // because all the ele in the right of the ele
+      // will also be greater than the element at i so we take count of all
+      // the ele after i
     }
     else
     {

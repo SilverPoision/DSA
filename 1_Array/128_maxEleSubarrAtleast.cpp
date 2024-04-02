@@ -2,6 +2,7 @@ class Solution
 {
 public:
   // https://leetcode.com/problems/count-subarrays-where-max-element-appears-at-least-k-times/
+  // https://www.youtube.com/watch?v=06VaWkj8e-0
   long long countSubarrays(vector<int> &nums, int k)
   {
     int n = nums.size();
