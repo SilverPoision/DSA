@@ -3,44 +3,22 @@ class Solution
 public:
   string removeKdigits(string num, int k)
   {
-    if (num.length() <= k)
-      return "0";
-    if (k == 0)
-      return num;
+    string st = "";
 
-    stack<char> st;
-
-    for (int i = 0; i < num.size(); i++)
+    for (auto it : num)
     {
-      while (k > 0 && !st.empty() && st.top() > num[i])
+      while (k && st.size() && st.back() > it)
       {
-        st.pop();
+        st.pop_back();
         k--;
       }
-      st.push(num[i]);
-
-      if (st.size() == 1 && num[i] == '0')
-        st.pop();
+      if (st.size() || it != '0')
+        st.push_back(it);
     }
 
-    while (k && !st.empty())
-    {
-      k--;
-      st.pop();
-    }
+    while (k-- && st.size())
+      st.pop_back();
 
-    string ans = "";
-    while (!st.empty())
-    {
-      ans.push_back(st.top());
-      st.pop();
-    }
-
-    reverse(ans.begin(), ans.end());
-
-    if (ans.length() == 0)
-      return "0";
-
-    return ans;
+    return st == "" ? "0" : st;
   }
 };
