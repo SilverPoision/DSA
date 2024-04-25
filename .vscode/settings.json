@@ -88,7 +88,8 @@
     "ios": "cpp",
     "barrier": "cpp",
     "latch": "cpp",
-    "semaphore": "cpp"
+    "semaphore": "cpp",
+    "__hash_table": "cpp"
   },
   "C_Cpp.errorSquiggles": "Disabled"
 }

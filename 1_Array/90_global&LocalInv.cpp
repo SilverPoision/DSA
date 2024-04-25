@@ -1,17 +1,23 @@
 class Solution
 {
 public:
-  // https://leetcode.com/problems/global-and-local-inversions/description/
-  bool isIdealPermutation(vector<int> &arr)
+  // https://leetcode.com/problems/global-and-local-inversions/
+  /*
+  The problem asks us to find whether the number of global inversions are equal to local
+   inversion.And we know all local inversion are global. Why? .Because local inversions
+   are basically gobal with a distance as one between them.So if we can find at least one
+   global inversion which is not local our job is done and we can eliminate by returning
+   false.And since we are maintaining the maximum value all the cases will be covered in it.
+  */
+  bool isIdealPermutation(vector<int> &A)
   {
-    // Any number can be placed at i or i+1 or i-1 ot the no of global inversion will be greater
-    int n = arr.size();
-    for (int i = 0; i < n; i++)
+    int cmax = 0, n = A.size();
+    for (int i = 0; i < n - 2; ++i)
     {
-      if (abs(arr[i] - i) > 1)
+      cmax = max(cmax, A[i]);
+      if (cmax > A[i + 2])
         return false;
     }
-
     return true;
   }
 };

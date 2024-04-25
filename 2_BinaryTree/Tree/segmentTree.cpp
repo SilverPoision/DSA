@@ -20,6 +20,28 @@ public:
     this->seg[ind] = max(this->seg[2 * ind + 1], this->seg[2 * ind + 2]);
   }
 
+  void update(int idx, int val, int low, int high, int ind)
+  {
+    if (low == high)
+    {
+      this->seg[ind] = val;
+      return;
+    }
+
+    int mid = low + (high - low) / 2;
+
+    if (low <= idx && idx <= mid)
+    {
+      update(idx, val, low, mid, 2 * ind + 1);
+    }
+    else
+    {
+      update(idx, val, mid + 1, high, 2 * ind + 2);
+    }
+
+    this->seg[ind] = max(this->seg[2 * ind + 1], this->seg[2 * ind + 2]);
+  }
+
   int query(int ind, int low, int high, int l, int r)
   {
     if (low >= l && high <= r)
@@ -41,9 +63,13 @@ int main()
   vector<pair<int, int>> q = {{1, 6}, {1, 5}, {0, 4}, {3, 6}, {6, 8}};
   SegmentTree s;
   s.buildTree(arr, 0, 0, n - 1);
+  // arr[1] = 10;
+  // s.update(1, 10, 0, n - 1, 0);
   for (auto it : q)
   {
     cout << s.query(0, 0, n - 1, it.first, it.second) << " ";
   }
+  // cout << s.query(0, 0, n - 1, 0, 2) << " ";
+
   return 0;
 }
