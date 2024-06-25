@@ -3,9 +3,16 @@ using namespace std;
 
 class SegmentTree
 {
-public:
-  int seg[100000];
+  vector<int> seg;
+  int n;
 
+public:
+  SegmentTree() {}
+  SegmentTree(int n)
+  {
+    this->n = n;
+    seg.resize(4 * n, 0);
+  }
   void buildTree(vector<int> &a, int ind, int low, int high)
   {
     if (low == high)
@@ -54,6 +61,19 @@ public:
     int right = query(2 * ind + 2, mid + 1, high, l, r);
     return max(left, right);
   }
+
+  void build(vector<int> &arr)
+  {
+    buildTree(arr, 0, 0, n - 1);
+  }
+  int query(int l, int r)
+  {
+    return query(0, 0, n - 1, l, r);
+  }
+  void update(int idx, int val)
+  {
+    update(idx, val, 0, n - 1, 0);
+  }
 };
 
 int main()
@@ -61,13 +81,13 @@ int main()
   vector<int> arr = {1, 3, 5, 2, 7, 9, 5, 2, 3, 6, 1};
   int n = arr.size();
   vector<pair<int, int>> q = {{1, 6}, {1, 5}, {0, 4}, {3, 6}, {6, 8}};
-  SegmentTree s;
-  s.buildTree(arr, 0, 0, n - 1);
+  SegmentTree s(n);
+  s.build(arr);
   // arr[1] = 10;
   // s.update(1, 10, 0, n - 1, 0);
   for (auto it : q)
   {
-    cout << s.query(0, 0, n - 1, it.first, it.second) << " ";
+    cout << s.query(it.first, it.second) << " ";
   }
   // cout << s.query(0, 0, n - 1, 0, 2) << " ";
 
