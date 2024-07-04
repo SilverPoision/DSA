@@ -3,41 +3,73 @@ class Solution
 public:
   // https://leetcode.com/problems/block-placement-queries/
   // https://www.youtube.com/watch?v=-1bvAUp3ZfU&list=PLEL7R4Pm6EmBxBrEq8g2L3MF3W3Shnk58&index=4
-  vector<bool> getResults(vector<vector<int>> &qs)
+
+  int n = 50001;
+  vector<int> bit;
+
+  void add(int id, int val)
   {
-    vector<bool> res;
-    set<int> blocks{0}; // sentinel
-    for (const auto &q : qs)
-      if (q[0] == 1)
-        blocks.insert(q[1]);
-    for (auto it = next(begin(blocks)); it != end(blocks); ++it)
-      update(*it, *it - *prev(it));
-    for (int i = qs.size() - 1; i >= 0; --i)
+    while (id <= n)
     {
-      int t = qs[i][0], x = qs[i][1], sz = t == 1 ? 0 : qs[i][2];
-      auto it = blocks.lower_bound(x);
-      if (t == 1)
+      bit[id] = max(bit[id], val);
+      id += (id & -id);
+    }
+  }
+  int query(int id)
+  {
+    int ans = 0;
+    while (id > 0)
+    {
+      ans = max(bit[id], ans);
+      id -= (id & -id);
+    }
+    return ans;
+  }
+  vector<bool> getResults(vector<vector<int>> &queries)
+  {
+    vector<bool> ans;
+    bit.resize(n);
+    set<int> ob;
+    // build all obstacle
+    ob.insert(0);
+    ob.insert(n + 1);
+    for (auto q : queries)
+    {
+      if (q[0] == 1)
       {
-        if (next(it) != end(blocks))
-          update(*next(it), *next(it) - *prev(it));
-        blocks.erase(it);
+        ob.insert(q[1]);
+      }
+    }
+    for (auto it = ob.begin(); it != ob.end(); it++)
+    {
+      if (it == ob.begin())
+        continue;
+      auto p = prev(it);
+      int x = *it;
+      add(x, x - *p);
+    }
+    for (int i = queries.size() - 1; i >= 0; i--)
+    {
+      if (queries[i][0] == 1)
+      {
+        int x = queries[i][1];
+        auto it = ob.find(x);
+        auto prv = prev(it);
+        auto nxt = next(it);
+        ob.erase(it);
+        add(*nxt, *nxt - *prv);
       }
       else
-        res.push_back(x - *prev(it) >= sz || getmax(x) >= sz);
+      {
+        int x = queries[i][1];
+        int sz = queries[i][2];
+        auto nxt = ob.upper_bound(x);
+        auto prv = prev(nxt);
+        int maxgap = max(query(*prv), x - *prv);
+        ans.push_back(maxgap >= sz);
+      }
     }
-    return vector<bool>(rbegin(res), rend(res));
-  }
-  int bit[50001] = {};
-  int getmax(int r)
-  {
-    int ret = 0;
-    for (; r >= 0; r = (r & (r + 1)) - 1)
-      ret = max(ret, bit[r]);
-    return ret;
-  }
-  void update(int idx, int val)
-  {
-    for (; idx < 50001; idx = idx | (idx + 1))
-      bit[idx] = max(bit[idx], val);
+    reverse(ans.begin(), ans.end());
+    return ans;
   }
 };

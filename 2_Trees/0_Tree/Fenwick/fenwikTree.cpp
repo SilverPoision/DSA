@@ -5,80 +5,56 @@
 using namespace std;
 // https://www.youtube.com/watch?v=9uaXG62Y8Uw
 
-class FenwikTree
+class Fenwick
 {
 public:
-  vector<int> fen;
-  int N;
+  vector<int> bit;
+  int n;
 
-  FenwikTree(int n)
+  Fenwick(int n)
   {
-    this->N = n + 1;
-    fen.resize(this->N, 0);
+    bit.resize(n, 0);
+    this->n = n;
   }
 
-  void update(int i, int add)
+  void upadte(int id, int val)
   {
-    while (i < N)
+    while (id <= n)
     {
-      this->fen[i] += add;
-      i += i & (-i);
+      bit[id] += val;
+      id += (id & (-id));
     }
   }
 
-  int sum(int i)
+  int query(int id)
   {
-    int s = 0;
-
-    while (i > 0)
+    int ans = 0;
+    while (id > 0)
     {
-      s += this->fen[i];
-      i -= (i & (-i));
+      ans += bit[id];
+      id -= (id & (-id));
     }
 
-    return s;
+    return ans;
   }
 
   int range(int l, int r)
   {
-    return sum(r) - sum(l - 1);
-  }
-
-  int lower_bound(int k)
-  {
-    int ans = 0, curr = 0, prevSum = 0;
-    for (int i = log2(N); i >= 0; i--)
-    {
-      if (fen[curr + (1 << i)] + prevSum < k)
-      {
-        curr = curr + (1 << i);
-        prevSum += fen[curr];
-      }
-    }
-
-    return curr + 1;
+    return query(r) - query(l - 1);
   }
 };
 
 int main()
 {
-  vector<int> arr = {
-      1,
-      0,
-      2,
-      1,
-      1,
-      3, 0, 4, 2, 5, 2, 2, 3, 1, 0, 2};
-  FenwikTree f(arr.size());
+  vector<int> arr = {0, 2, 3, 4, 56, 4, 3, 2, 1};
+  int n = arr.size();
+  Fenwick f(n);
 
-  for (int i = 0; i < arr.size(); i++)
+  for (int i = 1; i < n; i++)
   {
-    f.update(i + 1, arr[i]);
+    f.upadte(i, arr[i]);
   }
-
-  // f.update(1, 5);
-
-  cout << f.sum(3) << endl;
-  cout << f.lower_bound(27);
+  cout << endl;
+  cout << f.range(3, 5);
   return 0;
 }
