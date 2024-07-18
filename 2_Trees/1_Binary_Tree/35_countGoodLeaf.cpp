@@ -51,6 +51,65 @@ class Solution
 public:
   bool isLeaf(TreeNode *root)
   {
+    return !root->left && !root->right;
+  }
+  void findLeaf(TreeNode *root, vector<TreeNode *> &l, unordered_map<TreeNode *, TreeNode *> &par, TreeNode *p)
+  {
+    if (!root)
+      return;
+
+    if (p)
+      par[root] = p;
+
+    findLeaf(root->left, l, par, root);
+    findLeaf(root->right, l, par, root);
+
+    if (isLeaf(root))
+      l.push_back(root);
+  }
+  int dfs(TreeNode *root, int k, unordered_map<TreeNode *, TreeNode *> &par, TreeNode *prev)
+  {
+    if (!root || k < 0)
+      return 0;
+
+    if (isLeaf(root))
+    {
+      return 1;
+    }
+
+    int ans = 0;
+    if (par[root] && par[root] != prev)
+      ans += dfs(par[root], k - 1, par, root);
+    if (prev != root->left)
+      ans += dfs(root->left, k - 1, par, root);
+    if (prev != root->right)
+      ans += dfs(root->right, k - 1, par, root);
+
+    return ans;
+  }
+  int countPairs(TreeNode *root, int k)
+  {
+    vector<TreeNode *> leaf;
+    unordered_map<TreeNode *, TreeNode *> par;
+
+    findLeaf(root, leaf, par, nullptr);
+
+    int cnt = 0;
+
+    for (auto it : leaf)
+    {
+      cnt += dfs(par[it], k - 1, par, it);
+    }
+
+    return cnt / 2;
+  }
+};
+
+class Solution
+{
+public:
+  bool isLeaf(TreeNode *root)
+  {
     if (!root)
       return false;
     if (!root->left && !root->right)
