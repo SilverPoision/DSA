@@ -1,6 +1,50 @@
 class Solution
 {
 public:
+  int cc(char c) { return c - 'a'; }
+  long long minimumCost(string s, string t, vector<char> &o, vector<char> &c,
+                        vector<int> &cost)
+  {
+    int n = c.size();
+    vector<vector<int>> adj(26, vector<int>(26, 1e9));
+
+    for (int i = 0; i < n; i++)
+    {
+      adj[cc(o[i])][cc(c[i])] = min(cost[i], adj[cc(o[i])][cc(c[i])]);
+    }
+
+    for (char i = 'a'; i <= 'z'; i++)
+    {
+      adj[cc(i)][cc(i)] = 0;
+    }
+
+    for (char k = 'a'; k <= 'z'; k++)
+    {
+      for (char i = 'a'; i <= 'z'; i++)
+      {
+        for (char j = 'a'; j <= 'z'; j++)
+        {
+          adj[cc(i)][cc(j)] = min(adj[cc(i)][cc(j)], adj[cc(i)][cc(k)] + adj[cc(k)][cc(j)]);
+        }
+      }
+    }
+
+    long long int ans = 0;
+
+    for (int i = 0; i < s.size(); i++)
+    {
+      if (adj[cc(s[i])][cc(t[i])] == 1e9)
+        return -1;
+      ans = ans + adj[cc(s[i])][cc(t[i])];
+    }
+
+    return ans;
+  }
+};
+
+class Solution
+{
+public:
   // https://leetcode.com/problems/minimum-cost-to-convert-string-i/
   void dijkstra(char ch, unordered_map<char, vector<pair<char, int>>> &hash, vector<int> &dist)
   {

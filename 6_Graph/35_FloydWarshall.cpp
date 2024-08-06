@@ -1,6 +1,9 @@
 class Solution
 {
 public:
+  // we are trying to find any middle node between a b like a to c1 and c1 to b
+  // so that the dist of a to b is greater thean dist with middle node so k is the middle node and we are trying
+  // all the middle node with all the edges
   void shortest_distance(vector<vector<int>> &matrix)
   {
     int n = matrix.size();
