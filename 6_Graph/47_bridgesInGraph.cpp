@@ -18,6 +18,28 @@ Example 1:
 Input: n = 4, connections = [[0,1],[1,2],[2,0],[1,3]]
 Output: [[1,3]]
 Explanation: [[3,1]] is also accepted.
+
+While traversing adjacent nodes let ‘v’ of a particular node let ‘u’,
+then 3 cases arise –
+
+1. v is parent of u then,
+
+    skip that iteration.
+
+2. v is visited then,
+
+    update the low of u i.e. low[u] = min( low[u] , disc[v]) this arises
+    when a node can be visited by more than one node, but low is to keep
+    track of the lowest possible time so we will update it.
+
+3. v is not visited then,
+
+    call the DFS to traverse ahead
+    now update the low[u] = min( low[u], low[v] ) as we know v can’t be
+    parent cause we have handled that case first.now check
+    if ( low[v] > disc[u] ) i.e. the lowest possible to time
+    to reach ‘v’ is greater than ‘u’ this means we can’t reach ‘v’
+    without ‘u’ so the edge   u -> v is a bridge.
 */
 
 // Bridge is an edges that if removed, it converts the graph into multiple components
@@ -48,7 +70,7 @@ class Solution
       }
       else
       {
-        low[node] = min(low[node], low[it]);
+        low[node] = min(low[node], tin[it]);
       }
     }
   }
